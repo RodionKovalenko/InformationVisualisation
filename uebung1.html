@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>A simple bar chart</title>
+<style>
+    body {
+        margin: 50px;
+        font-family: Arial;
+    }
+</style>
+
+<body>
+    <p>Kovalenko Rodion</p>
+    <h1>A simple bar chart using only SVG and JavaScript</h1>
+    <p>Exercise Sheet 1</p>
+    <p>Lecture <i> Information and Software Visualization</i> , University of Duisburg-Essen, Summer Semester 2019</p>
+    <!-- An SVG container -->
+    <svg id="barChartContainer" width="850" height="500"></svg>
+
+    <script>/* JavaScript */
+        /* Sample dataset (label, value) */
+        var data = [
+            ['A', 110],
+            ['B', 126],
+            ['C', 213],
+            ['D', 142],
+            ['E', 223],
+            ['F', 127],
+            ['G', 200],
+            ['H', 315],
+            ['I', 279],
+            ['J', 190],
+            ['K', 156],
+            ['L', 409],
+        ];
+
+        var container = 'barChartContainer';
+
+        // Get and store the dimensions of SVG container here, you will need them all the time
+        var cWidth;
+        var cHeight;
+
+        // calling the function to make bar chart
+        drawBarChart(container, data);
+
+        /* Iterate the data array */
+        function drawBarChart(container, data) {
+            let svg = document.querySelector('#barChartContainer');
+            this.cWidth = svg.getAttribute('width');
+            this.cHeight = svg.getAttribute('height');
+            this.drawAxis();
+            // Create bars for each data values here!
+            data.forEach((element, i) => {
+                let x = cWidth / data.length * i + 30;
+                let y = cHeight - element[1] - 50;
+                let w = 20;
+                let h = element[1];
+                let bar = this.drawBar(x, y, h, w);
+                svg.appendChild(bar);
+            });
+
+
+        }
+
+        /* Draw a bar with height h and width w */
+        function drawBar(x, y, h, w) {
+            let svg = document.querySelector('#barChartContainer');
+            var point = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "rect"
+            );
+
+            point.setAttribute("x", x);
+            point.setAttribute("y", y);
+            point.setAttribute("height", h);
+            point.setAttribute('width', w);
+            point.setAttribute("fill", "#5CC0C0");
+            point.setAttribute("stroke", "#fff");
+            point.setAttribute("stroke-width", 2);            
+
+            return point;
+        }
+
+        /* create x- and y-axis of the bar chart */
+        function drawAxis() {
+            let svg = document.querySelector('#barChartContainer');
+            var lineDataX = "";
+            let lineDataY = "";
+
+            let count = this.data.length - 1;
+            this.data.map(function (coordinates, i) {
+                let textX = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "text"
+                );
+                let xAxis = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "circle"
+                );
+                xAxis.setAttribute("cx", cWidth / data.length * i + 40);
+                xAxis.setAttribute("cy", this.cHeight - 45);
+                xAxis.setAttribute("r", 6);
+                xAxis.setAttribute("fill", "#5CC0C0");
+                xAxis.setAttribute("stroke", "#fff");
+                xAxis.setAttribute("stroke-width", 2);
+
+                textX.setAttribute('x', this.cWidth / data.length * i + 40);
+                textX.setAttribute('y', this.cHeight - 25);
+                textX.setAttribute('font-size', 10);
+                textX.innerHTML = coordinates[0];
+
+                let textY = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "text"
+                );
+                let yAxis = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "circle"
+                );
+
+                yAxis.setAttribute("cx", 5);
+                yAxis.setAttribute("cy", (count * 50 - 100));
+                yAxis.setAttribute("r", 6);
+                yAxis.setAttribute("fill", "#5CC0C0");
+                yAxis.setAttribute("stroke", "#fff");
+                yAxis.setAttribute("stroke-width", 2);
+
+                textY.setAttribute('x', 12);
+                textY.setAttribute('y', i * 50);
+                textY.setAttribute('font-size', 8);
+                let text = count * 50 - 100;
+                textY.innerHTML = text > 0 ? text : '';
+
+
+                count--;
+
+
+                svg.appendChild(xAxis);
+                svg.appendChild(yAxis);
+                svg.appendChild(textX);
+                svg.appendChild(textY);
+            });
+
+            data.forEach((element, i) => {
+                var command = i === 0 ? "M" : "L";
+                lineDataX = lineDataX
+                    + " "
+                    + command
+                    + " "
+                    + i * (this.cWidth / data.length) + i * 5
+                    + ","
+                    + (this.cHeight - 45);
+            });
+            data.forEach((element, i) => {
+                var command = i === 0 ? "M" : "L";
+                lineDataY = lineDataY
+                    + " "
+                    + command
+                    + " "
+                    + 2
+                    + ","
+                    + i * cHeight / data.length;
+            });
+
+            var xLine = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "path"
+            );
+            xLine.setAttribute("d", lineDataX);
+            xLine.setAttribute("fill", "red");
+            xLine.setAttribute("stroke", "#5CC0C0");
+            xLine.setAttribute("stroke-width", 5);
+
+            var yLine = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "path"
+            );
+            yLine.setAttribute("d", lineDataY);
+            yLine.setAttribute("fill", "red");
+            yLine.setAttribute("stroke", "#5CC0C0");
+            yLine.setAttribute("stroke-width", 5);
+
+            svg.appendChild(xLine);
+            svg.appendChild(yLine);
+        }
+
+    </script>
+
+<h2>Explanation of the solution</h2>
+<p> I have created barchart using SVG rectangles. Height of rectangles is taken from the data array. 
+    Width is given approximately (20px). 
+    
+    Container width is divided according to the data length, what insures the same distances between bars. 
+    
+    Axes are created with lines. Text and circles were placed as additional components to ensure user experience. 
+</p>
