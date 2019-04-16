@@ -54,7 +54,8 @@
                 let y = cHeight - element[1] - 50;
                 let w = 20;
                 let h = element[1];
-                this.drawBar(x, y, h, w);
+                let bar = this.drawBar(x, y, h, w);
+                svg.appendChild(bar);
             });
 
 
@@ -63,21 +64,18 @@
         /* Draw a bar with height h and width w */
         function drawBar(x, y, h, w) {
             let svg = document.querySelector('#barChartContainer');
-            // let bar = '<rect x="' + x + '"y="' + y + '" height="' + h + '" width="' + w + '" style="background-color:red"></rect>';
-            // svg.innerHTML = svg.innerHTML + bar;
-
             var point = document.createElementNS(
                 "http://www.w3.org/2000/svg",
                 "rect"
             );
+
             point.setAttribute("x", x);
             point.setAttribute("y", y);
             point.setAttribute("height", h);
             point.setAttribute('width', w);
             point.setAttribute("fill", "#5CC0C0");
             point.setAttribute("stroke", "#fff");
-            point.setAttribute("stroke-width", 2);
-            svg.appendChild(point);
+            point.setAttribute("stroke-width", 2);            
 
             return point;
         }
@@ -187,9 +185,11 @@
 
     </script>
 
-    <h2>Explanation of the solution</h2>
-    <p>If required!</p>
-    <h2>Sources</h2>
-    <ul>
-        <li>[Own sources ...]</li>
-    </ul>
+<h2>Explanation of the solution</h2>
+<p> I have created barchart using SVG rectangles. Height of rectangles is taken from the data array. 
+    Width is given approximately (20px). 
+    
+    Container width is divided according to the data length, what insures the same distances between bars. 
+    
+    Axes are created with lines. Text and circles were placed as additional components to ensure user experience. 
+</p>
