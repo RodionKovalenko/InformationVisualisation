@@ -42,6 +42,8 @@
         var width = 960,
             height = 600;
         let mean = this.getMean(data);
+        let min = this.getMin(data);
+        let max = this.getMax(data);
 
         /* Initialization of SVG graphics */
         var svg = d3.select("body").append("svg")
@@ -67,46 +69,77 @@
 
         /* Draw appropriateness for a situation-behavior pair */
         function drawPair(element, appropriateness, i, j) {
-            // d3.select(element).append('rect')
-            //     .attr('x', i * (this.width / data.length))
-            //     .attr('y', j * (this.height / data.length))
-            //     .attr('width', appropriateness * (this.width / (data[0].length*data[1].length)))
-            //     .attr('height', appropriateness * (this.height / (data[0].length*data[1].length)))
-            //     .attr('fill', '#'+Math.floor(Math.random()*16777215).toString(16))
+            d3.select(element).append('rect')
+                .attr('x', i * (width/data.length) - i*max)
+                .attr('y', j * (height/data.length) - j*max)
+                .attr('width', appropriateness * (width/height) + max)
+                .attr('height', appropriateness * (width/height) + max)
+                    .attr('transform', 'translate(100, 50)')
+                    .attr('fill', '#' + Math.floor(Math.random() * 16777215).toString(16))
+                    .on('mouseover', function (value) {
+                        //  append text 
+                        d3.select(this)
+                            .append("title")
+                            .text(() => { return appropriateness; });
 
-            d3.select(element).append('circle')
-                .attr('cx', i * (this.width / data[0].length))
-                .attr('cy', j * (this.height / data[1].length))
-                .attr('r', appropriateness * (width / height))
-                .attr('transform', 'translate(20, 20)')
-                .attr('fill', '#' + Math.floor(Math.random() * 16777215).toString(16))
-                .on('mouseover', function (value) {
-                    //  append text 
-                    d3.select(this)
-                        .append("title")
-                        .text(() => { return appropriateness; });
-                    // make circle a little larger 
-                    d3.select(this)
-                        .transition()
-                        .ease(d3.easeSin)
-                        .duration('200')
-                        .attr('r', mean * 3)
-                        .attr('fill', 'springgreen');
+                        // make circle a little larger 
+                        d3.select(this)
+                            .transition()
+                            .ease(d3.easeSin)
+                            .duration('200')
+                            .attr('width', max * 3)
+                            .attr('height', max * 3)
+                            .attr('fill', 'springgreen');
+                    })
+                    .on('mouseout', function (value) {
+                        d3.select(this)
+                            .selectAll('title').remove();
 
-                })
-                .on('mouseout', function (value) {
-                    d3.select(this)
-                        .selectAll('title').remove();
-
-                    d3.select(this)
-                        .transition()
-                        .ease(d3.easeSin)
-                        .duration('200')
-                        .attr('r', appropriateness * (width / height))
-                        .attr('fill', '#' + Math.floor(Math.random() * 16777215).toString(16));
-                });
+                        d3.select(this)
+                            .transition()
+                            .ease(d3.easeSin)
+                            .duration('200')
+                            .attr('width',appropriateness * (width/height) + max)
+                            .attr('height', appropriateness * (width/height) + max)
+                            .attr('fill', '#' + Math.floor(Math.random() * 16777215).toString(16));
+                    });
         }
 
+
+
+        this.drawAxis();
+
+        function drawAxis() {
+            // x axis 
+            var scale = d3.scalePoint()
+                .domain(columnLabels)
+                .range([0, this.width - 200]);
+
+            // Add scales to axis
+            var x_axis = d3.axisBottom()
+                .scale(scale);
+
+            //Append group and insert axis
+            svg.append("g")
+                .attr("transform", "translate(110, 0)")
+                .call(x_axis);
+
+            // y axis 
+            scale = d3.scalePoint()
+                .domain(rowLabels)
+                .range([this.height - 150, 0]);
+
+            var y_axis = d3.axisLeft()
+                .scale(scale);
+
+            svg.append("g")
+                .attr("transform", "translate(80, 50)")
+                .call(y_axis);
+        }
+
+        /** @param data[][]
+         return double 
+        */
         function getMean(data) {
             let mean = 0;
             data.forEach((array) => {
@@ -116,8 +149,34 @@
             });
 
             mean /= (data[0].length * data[1].length);
-            
-            return mean; 
+
+            return mean;
+        }
+
+        function getMax(data) {
+            let max = 0;
+            data.forEach((array) => {
+                array.forEach((value) => {
+                    if (max < value) {
+                        max = value;
+                    }
+                });
+            });
+
+            return max;
+        }
+
+        function getMin(data) {
+            let min = data[0][0];
+            data.forEach((array) => {
+                array.forEach((value) => {
+                    if (min > value) {
+                        min = value;
+                    }
+                });
+            });
+
+            return min;
         }
 
     </script>
