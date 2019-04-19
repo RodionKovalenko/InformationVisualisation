@@ -70,39 +70,39 @@
         /* Draw appropriateness for a situation-behavior pair */
         function drawPair(element, appropriateness, i, j) {
             d3.select(element).append('rect')
-                .attr('x', i * (width/data.length) - i*max)
-                .attr('y', j * (height/data.length) - j*max)
-                .attr('width', appropriateness * (width/height) + max)
-                .attr('height', appropriateness * (width/height) + max)
-                    .attr('transform', 'translate(100, 50)')
-                    .attr('fill', '#' + Math.floor(Math.random() * 16777215).toString(16))
-                    .on('mouseover', function (value) {
-                        //  append text 
-                        d3.select(this)
-                            .append("title")
-                            .text(() => { return appropriateness; });
+                .attr('x', i * (width / data.length) - i * max)
+                .attr('y', j * (height / data.length) - j * max)
+                .attr('width', appropriateness * (width / height) + max)
+                .attr('height', appropriateness * (width / height) + max)
+                .attr('transform', 'translate(100, 50)')
+                .attr('fill', '#' + Math.floor(Math.random() * 16777215).toString(16))
+                .on('mouseover', function (value) {
+                   //  append text 
+                    d3.select(this)
+                        .append("title")
+                        .text(() => { return appropriateness + '\n ' + columnLabels[i] + '-' + rowLabels[j]; });
 
-                        // make circle a little larger 
-                        d3.select(this)
-                            .transition()
-                            .ease(d3.easeSin)
-                            .duration('200')
-                            .attr('width', max * 3)
-                            .attr('height', max * 3)
-                            .attr('fill', 'springgreen');
-                    })
-                    .on('mouseout', function (value) {
-                        d3.select(this)
-                            .selectAll('title').remove();
+                    // make circle a little larger 
+                    d3.select(this)
+                        .transition()
+                        .ease(d3.easeSin)
+                        .duration('200')
+                        .attr('width', max * 3)
+                        .attr('height', max * 3)
+                        .attr('fill', 'springgreen');
+                })
+                .on('mouseout', function (value) {
+                    d3.select(this)
+                        .selectAll('title').remove();
 
-                        d3.select(this)
-                            .transition()
-                            .ease(d3.easeSin)
-                            .duration('200')
-                            .attr('width',appropriateness * (width/height) + max)
-                            .attr('height', appropriateness * (width/height) + max)
-                            .attr('fill', '#' + Math.floor(Math.random() * 16777215).toString(16));
-                    });
+                    d3.select(this)
+                        .transition()
+                        .ease(d3.easeSin)
+                        .duration('200')
+                        .attr('width', appropriateness * (width / height) + max)
+                        .attr('height', appropriateness * (width / height) + max)
+                        .attr('fill', '#' + Math.floor(Math.random() * 16777215).toString(16));
+                });
         }
 
 
@@ -127,13 +127,13 @@
             // y axis 
             scale = d3.scalePoint()
                 .domain(rowLabels)
-                .range([this.height - 150, 0]);
+                .range([0, height - 160]);
 
             var y_axis = d3.axisLeft()
                 .scale(scale);
 
             svg.append("g")
-                .attr("transform", "translate(80, 50)")
+                .attr("transform", "translate(80, 55)")
                 .call(y_axis);
         }
 
