@@ -45,10 +45,15 @@
         let min = this.getMin(data);
         let max = this.getMax(data);
 
+
+
         /* Initialization of SVG graphics */
         var svg = d3.select("body").append("svg")
             .attr("width", width)
             .attr("height", height);
+
+        this.drawLegend();
+        this.drawAxis();
 
         /* Iterate the data matrix */
         svg.selectAll()
@@ -74,13 +79,22 @@
                 .attr('y', j * (height / data.length) - j * max)
                 .attr('width', appropriateness * (width / height) + max)
                 .attr('height', appropriateness * (width / height) + max)
-                .attr('transform', 'translate(100, 50)')
+                .attr('transform', 'translate(100, 80)')
                 .attr('fill', '#' + Math.floor(Math.random() * 16777215).toString(16))
                 .on('mouseover', function (value) {
-                   //  append text 
+                    //  append text 
                     d3.select(this)
                         .append("title")
                         .text(() => { return appropriateness + '\n ' + columnLabels[i] + '-' + rowLabels[j]; });
+
+                    d3.select('g.situation_behavior')
+                        .append("text")
+                        .text(() => { return appropriateness })
+                        .attr('x', i * (width / data.length) - i * max)
+                        .attr('y', j * (height / data.length) - j * max)
+                        .attr('font-size', '0.7em')
+                        .attr("transform", "translate(130, 70)")
+
 
                     // make circle a little larger 
                     d3.select(this)
@@ -94,6 +108,8 @@
                 .on('mouseout', function (value) {
                     d3.select(this)
                         .selectAll('title').remove();
+                    d3.select('g.situation_behavior')
+                        .selectAll('text').remove();
 
                     d3.select(this)
                         .transition()
@@ -105,9 +121,6 @@
                 });
         }
 
-
-
-        this.drawAxis();
 
         function drawAxis() {
             // x axis 
@@ -121,7 +134,7 @@
 
             //Append group and insert axis
             svg.append("g")
-                .attr("transform", "translate(110, 0)")
+                .attr("transform", "translate(110, 50)")
                 .call(x_axis);
 
             // y axis 
@@ -133,7 +146,7 @@
                 .scale(scale);
 
             svg.append("g")
-                .attr("transform", "translate(80, 55)")
+                .attr("transform", "translate(80, 85)")
                 .call(y_axis);
         }
 
@@ -179,12 +192,54 @@
             return min;
         }
 
+        function drawLegend() {
+            this.svg.append('text')
+                .text(() => { return 'situation' })
+                .attr('x', width / 2)
+                .attr('y', 40)
+                .attr('font-size', '1em')
+                .style('fill', 'blue')
+
+            this.svg.append('text')
+                .text(() => { return 'situation behavior' })
+                .attr('x', 5)
+                .attr('y', 100)
+                .attr('font-size', '1em')
+                .style("writing-mode", "vertical-rl")
+                .style('text-orientation', 'upright')
+                .style('fill', 'blue')
+
+            this.svg.append('rect')
+                .attr('width', 10)
+                .attr('height', 10)
+                .attr('x', 20)
+                .attr('y', 0)
+                .attr('fill', 'blue')
+                .attr("transform", "translate(40, 20)")
+
+            this.svg.append('text')
+                .text(() => { return 'appropreateness' })
+                .attr('x', 50)
+                .attr('y', 15)
+                .attr('font-size', '1em')               
+                .style('fill', 'blue')
+        }
+
     </script>
 
     <h2>Explanation of the solution</h2>
 
-    <p><b>(a):</b> [your explaination]</p>
-    <p><b>(b):</b> [your explaination]</p>
+    <p><b>(a):</b> For the solution of the task I have chosen rectangles for data representation
+        as it seemed to me the best optical choice.
+        Difficult part of the task was to chooce the right size of rectangles as the values in data array were very
+        small,
+        and could not be displayed properly.
+        Adding labels and legend to the chart was another difficult issue.
+    </p>
+    <p><b>(b):</b> For displaying the data I chose onmouseover event in d3. In this way I could display the values and
+        the name of
+        corresponding columns and rows.
+    </p>
 
 
 
@@ -200,4 +255,17 @@
                 of
                 arrays in D3</a></li>
         <li>[Own sources ...]</li>
+        <li> <a href='https://adam.garrett-harris.com/how-to-bring-svg-elements-to-the-front/'>
+                mouse events in d3, transitions
+            </a> </li>
+        <li> <a href='https://www.tutorialsteacher.com/d3js/axes-in-d3'>
+                how to create axis in d3
+            </a> </li>
+        <li> <a href='https://www.packtpub.com/web-development/d3js-cutting-edge-data-visualization'>
+                ebook in d3 for better understanding
+            </a> </li>
+        <li> <a
+                href='https://stackoverflow.com/questions/46782827/d3-adding-style-and-class-to-div-results-in-styles-discarded/46782919'>
+                forum regarding setting attributes and styles in d3
+            </a></li>
     </ul>
