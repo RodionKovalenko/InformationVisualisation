@@ -73,11 +73,8 @@ data = data.frame(
 )
 
 #plot the correlation between data
-plot(data,
-     main = 'Correlation',
-     
-     
-     col = ifelse(
+p = plot(data,
+       col = ifelse(
        species == 'versicolor',
        'red',
        ifelse(
@@ -86,11 +83,11 @@ plot(data,
          ifelse(species == 'setosa', 'blue', 'black')
        )
      ))
-
-legend('topright', c("setosa", "virginica", "versicolor"),
+par(xpd=TRUE)
+legend(x=0, y=1, c("setosa", "virginica", "versicolor"),
        col = c('blue','green','red'),
-       pch = c(19, 19, 19), merge = TRUE, bg='gray90',
-       cex = 1.3, pt.cex = 1)
+       pch = c(19, 19, 19), merge = TRUE, bg='gray90', 
+       cex = 1, y.intersp=0.5, text.width=0.2, x.intersp=0.4)
 
 
 #save file
@@ -107,7 +104,11 @@ plot(data,
          ifelse(species == 'setosa', 'blue', 'black')
        )
      ))
-
+par(xpd=TRUE)
+legend(x=0, y=1, c("setosa", "virginica", "versicolor"),
+       col = c('blue','green','red'),
+       pch = c(19, 19, 19), merge = TRUE, bg='gray90', 
+       cex = 1, y.intersp=0.5, text.width=0.2, x.intersp=0.4)
 dev.off()
 
 
