@@ -66,7 +66,6 @@ slength = iris['Sepal.Length']
 swidth = iris['Sepal.Width']
 
 data = data.frame(
-  "species" = iris['Species'],
   "plength" = plength,
   "pwidth" = pwidth,
   "slength" = slength,
@@ -88,6 +87,10 @@ plot(data,
        )
      ))
 
+legend('topright', c("setosa", "virginica", "versicolor"),
+       col = c('blue','green','red'),
+       pch = c(19, 19, 19), merge = TRUE, bg='gray90',
+       cex = 1.3, pt.cex = 1)
 
 
 #save file
