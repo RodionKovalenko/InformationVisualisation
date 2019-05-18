@@ -39,7 +39,7 @@
 </style>
 
 <body>
-    <p>[Last Name, First Name]</p>
+    <p>Kovalenko Rodion</p>
     <h1>Document Visualization: Relationship between Keywords </h1>
     <p>Exercise Sheet 05</p>
     <p>Lecture <i>Information and Software Visualization</i>, Universität Duisburg-Essen, SoSe 2019</p>
@@ -1260,32 +1260,40 @@
 
         let maxSize = 0;
 
+        // create unique nodes 
         function createNodes() {
-            let keywordSet = new Set();
+            let keywordsSet = new Set();
+
             for (let key in bib) {
-                let item = bib[key];
-                let keyswords = item.keywords.split(',');
+                let publication = bib[key];
+                let keyswords = publication.keywords.split(',');
 
                 keyswords.forEach(keyword => {
-                    keywordSet.add(keyword);
+                    keywordsSet.add(keyword);
                 });
-
             }
-            let keywordUnique = [];
-            keywordSet.forEach(keyword => {
+
+            let keywordsUnique = [];
+
+            keywordsSet.forEach(keyword => {
                 let size = this.getSize(keyword);
+
                 if (maxSize < size) {
                     maxSize = size;
                 }
-                keywordUnique.push({ id: keyword, size: size });
+
+                keywordsUnique.push({ id: keyword, size: size });
             });
 
-            return keywordUnique;
+            return keywordsUnique;
         }
 
+        // define number of a same keyword in all publications
         function getSize(keyword) {
             let count = 0;
+
             for (let key in bib) {
+
                 let keywords = bib[key].keywords.split(',');
                 keywords.forEach(keywordCheck => {
                     if (keywordCheck === keyword) {
@@ -1293,10 +1301,11 @@
                     }
                 });
             }
+
             return count;
         }
 
-
+        // create edges to the nodes
         function createLinks() {
             let links = [];
             let count = 0;
@@ -1568,7 +1577,7 @@
             .attr("x", 0)
             .attr("y", 0)
             .attr("r", (d) => { return legendScaler(d); })
-            .style("fill", 'blue')
+            .style("fill", 'green')
 
         legend.append('text')
             .attr("x", 20)
@@ -1589,15 +1598,40 @@
 
     <h2>Explanation of the solution</h2>
 
-    <p><b>(a)</b> ...</p>
+    <p><b>(a)</b>
+        I have selected all the nodes, but only once. That means, that every node occur in a set or array only
+        one time. Based on that I attached to every node two parameters: id and size. Id is a node identifier
+        defined by keyword of publication.Size is a total number of same keywords in all publications.
+        By creating the links (edges) it was necessary to take into account the fact, that keywords should
+        be limited to at least three publications. This was necessary for task 2, but I have implemented
+        it in this funktion as well. The weight of links was determined by number of publications
+        with both keywords of target and source.
+        Legend was added to the graph, specifying the minimal and maximal node size, based on number of a keyword 
+        in all publications. 
+    </p>
 
-    <p><b>(b)</b> ...</p>
+    <p><b>(b)</b>
+        Click events was added to the nodes, triggering additional functions, such as changing the size and color 
+        of a selected node and displaying the necessary information in "div" element. 
+    </p>
 
-    <p><b>(c)</b> ...</p>
+    <p><b>(c)</b>
+        As mentioned in subtask a) I have limited the number of nodes based on contition,
+        that each should should appear in at least three publications. 
+    </p>
 
     <h2>References</h2>
 
     <ul>
         <li><a href="https://bl.ocks.org/mbostock/4062045">Force-Directed Graph</a></li>
-        <li>...</li>
+        <li><a href="https://bl.ocks.org/puzzler10/2ce53e7592ef80e164821f26d426f723">
+                node and link attributes
+            </a></li>
+        <li><a href="https://www.tutorialsteacher.com/d3js/dom-manipulation-using-d3js">
+                DOM manipulation in d3
+            </a></li>
+        <li><a href="http://bl.ocks.org/ZJONSSON/3918369">
+                Legende in d3
+            </a></li>
+
     </ul>
